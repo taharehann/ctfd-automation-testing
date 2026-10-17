@@ -1,0 +1,22 @@
+test_id,username,email,password,result,messages
+EC1,user_{uid},u{uid}@test.com,Pass@123,created,
+EC2,"   ",u{uid}@test.com,Pass@123,rejected,Pick a longer user name
+EC3,admin,u{uid}@test.com,Pass@123,rejected,That user name is already taken
+EC4,{uid}@b.com,u{uid}@test.com,Pass@123,rejected,Your user name cannot be an email address
+EC6a,user_{uid},abc,Pass@123,rejected,
+EC6b,user_{uid},abc@,Pass@123,rejected,
+EC7,user_{uid},admin@test.com,Pass@123,rejected,That email has already been used
+EC9,user_{uid},u{uid}@test.com,"   ",rejected,Pick a longer password
+BVA1,,u{uid}@test.com,Pass@123,rejected,
+BVA2,{rc},u{uid}@test.com,Pass@123,created,
+BVA3,{rc}{rc},u{uid}@test.com,Pass@123,created,
+BVA4,user_{uid},u{uid}@test.com,,rejected,
+BVA5,user_{uid},u{uid}@test.com,a,created,
+BVA6,user_{uid},u{uid}@test.com,{a127},created,
+BVA7,user_{uid},u{uid}@test.com,{a128},created,
+BVA8,user_{uid},u{uid}@test.com,{a129},rejected,Pick a shorter password
+R6,admin,u{uid}@test.com,{a129},rejected,That user name is already taken|Pick a shorter password
+R7,user_{uid},admin@test.com,{a129},rejected,That email has already been used|Pick a shorter password
+R8,admin,admin@test.com,{a129},rejected,That user name is already taken|That email has already been used|Pick a shorter password
+EG1,"  user_{uid}  ",u{uid}@test.com,Pass@123,created,
+EG2,user_{uid},ADMIN@TEST.COM,Pass@123,rejected,That email has already been used
