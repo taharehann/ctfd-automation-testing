@@ -1,0 +1,10 @@
+test_id,flag,message
+FL1,flag{test123},Correct
+FL2,wrong,Incorrect
+FL3,FLAG{TEST123},Incorrect
+FL4,flag{test123,Incorrect
+FL5,flag{test123}x,Incorrect
+FL6,"  flag{test123}  ",Correct
+FL7,,Incorrect
+FL8,"' OR 1=1 --",Incorrect
+FL9,{a1000},Incorrect
