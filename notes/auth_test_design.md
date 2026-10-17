@@ -11,33 +11,35 @@ I tried the form and read through `auth.py` to find the rules:
 - Email: must be a valid email format and must not be used already. It is converted to lowercase.
 - Password: cannot be empty (spaces are trimmed first) and cannot be longer than 128 characters. There is no minimum length by default.
 
+Note: if a field is completely blank, or the email format is wrong, the browser stops the form before it is sent, so no message from the server is shown. Messages from the server only appear for values that pass the browser check, such as spaces only.
+
 ## 1. Equivalence Class Partitioning
 
-| ID   | Field    | Class                           | Valid/Invalid | Sample input         | Expected result                           |
-| ---- | -------- | ------------------------------- | ------------- | -------------------- | ----------------------------------------- |
-| EC1  | Username | Unique, not empty, not an email | Valid         | user_ok1             | Account created                           |
-| EC2  | Username | Empty or only spaces            | Invalid       | (blank), " "         | Pick a longer user name                   |
-| EC3  | Username | Already taken                   | Invalid       | admin                | That user name is already taken           |
-| EC4  | Username | In email format                 | Invalid       | a@b.com              | Your user name cannot be an email address |
-| EC5  | Email    | Valid format, not used          | Valid         | ok1@test.com         | Account created                           |
-| EC6  | Email    | Wrong format                    | Invalid       | abc, abc@, @test.com | Please enter a valid email address        |
-| EC7  | Email    | Already used                    | Invalid       | admin@test.com       | That email has already been used          |
-| EC8  | Password | 1 to 128 characters             | Valid         | Pass@123             | Account created                           |
-| EC9  | Password | Empty or only spaces            | Invalid       | (blank), " "         | Pick a longer password                    |
-| EC10 | Password | More than 128 characters        | Invalid       | 129 x "a"            | Pick a shorter password                   |
+| ID   | Field    | Class                           | Valid/Invalid | Sample input         | Expected result                                       |
+| ---- | -------- | ------------------------------- | ------------- | -------------------- | ----------------------------------------------------- |
+| EC1  | Username | Unique, not empty, not an email | Valid         | user_ok1             | Account created                                       |
+| EC2  | Username | Only spaces                     | Invalid       | "   " (3 spaces)     | Pick a longer user name                               |
+| EC3  | Username | Already taken                   | Invalid       | admin                | That user name is already taken                       |
+| EC4  | Username | In email format                 | Invalid       | a@b.com              | Your user name cannot be an email address             |
+| EC5  | Email    | Valid format, not used          | Valid         | ok1@test.com         | Account created                                       |
+| EC6  | Email    | Wrong format                    | Invalid       | abc, abc@            | Form is not submitted (browser email check)           |
+| EC7  | Email    | Already used                    | Invalid       | admin@test.com       | That email has already been used                      |
+| EC8  | Password | 1 to 128 characters             | Valid         | Pass@123             | Account created                                       |
+| EC9  | Password | Only spaces                     | Invalid       | "   " (3 spaces)     | Pick a longer password                                |
+| EC10 | Password | More than 128 characters        | Invalid       | 129 x "a"            | Pick a shorter password                               |
 
 ## 2. Boundary Value Analysis
 
-| ID   | Field    | Boundary                       | Input     | Expected result         |
-| ---- | -------- | ------------------------------ | --------- | ----------------------- |
-| BVA1 | Username | Below minimum (0 chars)        | (blank)   | Pick a longer user name |
-| BVA2 | Username | Minimum (1 char)               | a         | Account created         |
-| BVA3 | Username | Just above minimum (2 chars)   | ab        | Account created         |
-| BVA4 | Password | Below minimum (0 chars)        | (blank)   | Pick a longer password  |
-| BVA5 | Password | Minimum (1 char)               | a         | Account created         |
-| BVA6 | Password | Just below maximum (127 chars) | 127 x "a" | Account created         |
-| BVA7 | Password | Maximum (128 chars)            | 128 x "a" | Account created         |
-| BVA8 | Password | Just above maximum (129 chars) | 129 x "a" | Pick a shorter password |
+| ID   | Field    | Boundary                       | Input     | Expected result              |
+| ---- | -------- | ------------------------------ | --------- | ---------------------------- |
+| BVA1 | Username | Below minimum (0 chars)        | (blank)   | Form is not submitted        |
+| BVA2 | Username | Minimum (1 char)               | a         | Account created              |
+| BVA3 | Username | Just above minimum (2 chars)   | ab        | Account created              |
+| BVA4 | Password | Below minimum (0 chars)        | (blank)   | Form is not submitted        |
+| BVA5 | Password | Minimum (1 char)               | a         | Account created              |
+| BVA6 | Password | Just below maximum (127 chars) | 127 x "a" | Account created              |
+| BVA7 | Password | Maximum (128 chars)            | 128 x "a" | Account created              |
+| BVA8 | Password | Just above maximum (129 chars) | 129 x "a" | Pick a shorter password      |
 
 ## 3. Decision Table (Registration)
 
@@ -65,9 +67,9 @@ I tried the form and read through `auth.py` to find the rules:
 
 ## 5. Error Guessing
 
-| ID  | Input                                     | Why                                                          |
-| --- | ----------------------------------------- | ------------------------------------------------------------ |
-| EG1 | Username " user " with spaces around it   | The app trims spaces                                         |
-| EG2 | Email OK@TEST.COM when ok@test.com exists | The app lowercases emails, so it should count as a duplicate |
-| EG3 | Username `<script>alert(1)</script>`      | Check that scripts are not run                               |
-| EG4 | Username `' OR 1=1 --`                    | Check that SQL is not run                                    |
+| ID  | Input                                       | Why                                                          |
+| --- | ------------------------------------------- | ------------------------------------------------------------ |
+| EG1 | Username "  user  " with spaces around it   | The app trims spaces                                         |
+| EG2 | Email OK@TEST.COM when ok@test.com exists   | The app lowercases emails, so it should count as a duplicate |
+| EG3 | Username `<script>alert(1)</script>`        | Check that scripts are not run                               |
+| EG4 | Username `' OR 1=1 --`                      | Check that SQL is not run                                    |
