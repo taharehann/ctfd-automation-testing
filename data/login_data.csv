@@ -1,0 +1,6 @@
+test_id,username,password,result,message
+L1,login_user,Login@123,logged_in,
+L2,login_user@test.com,Login@123,logged_in,
+L3,login_user,WrongPass1,rejected,Your username or password is incorrect
+L4,no_such_user_xyz,Login@123,rejected,Your username or password is incorrect
+L5,,,rejected,
