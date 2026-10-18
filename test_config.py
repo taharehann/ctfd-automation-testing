@@ -10,18 +10,39 @@ GROUPS = {
     ],
     "challenges": ["tests.test_challenges.ChallengeTests"],
     "scoreboard": ["tests.test_scoreboard.ScoreboardTests"],
+    "settings": ["tests.test_settings.SettingsTests"],
+    "users": ["tests.test_users.UsersTests"],
+    "admin": ["tests.test_admin.AdminTests"],
 }
 
 # SUITES: named sets of groups that can be run with --suite
 SUITES = {
     "quick": ["smoke", "auth"],
-    "full": ["smoke", "auth", "challenges", "scoreboard"],
+    "full": ["smoke", "auth", "challenges", "scoreboard", "settings", "users", "admin"],
 }
 
 # METHOD_ORDER: the order of the test cases inside a class.
 # A test runs earlier if its name starts with an earlier entry.
 # Tests that are not listed run last, in alphabetical order.
 METHOD_ORDER = {
+    "AdminTests": [
+        "test_admin_dashboard_navigation",
+        "test_custom_page_publication_lifecycle",
+        "test_user_ban_and_unban_lifecycle",
+        "test_admin_data_driven",
+    ],
+    "UsersTests": [
+        "test_users_directory_page_structure",
+        "test_directory_to_profile_navigation",
+        "test_user_profile_solve_reflection",
+        "test_user_profile_metadata_display",
+        "test_users_data_driven",
+    ],
+    "SettingsTests": [
+        "test_settings_page_opens",
+        "test_profile_persistence_on_reload",
+        "test_settings_data_cases",
+    ],
     "LoginTests": [
         "test_login",
         "test_logout",

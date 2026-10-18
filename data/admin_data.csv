@@ -1,0 +1,10 @@
+test_id,technique,category,user_role,route,title,content,draft,hidden,auth_required,expected_outcome,expected_text,note
+ADM-EC1,Cause-Effect Graphing,access_control,unauth,/admin,,,,,redirect_login,/login,Unauthenticated access to /admin
+ADM-EC2,Cause-Effect Graphing,access_control,regular,/admin,,,,,redirect_login,/login,Regular user access to /admin
+ADM-EC3,Cause-Effect Graphing,access_control,admin,/admin,,,,,dashboard_loaded,Admin Panel,Admin access to /admin
+ADM-EC4,Decision Table,page_creation,admin,rules-{uid},Official Rules,# Official Rules Content,False,False,False,published_page,Official Rules Content,Published page visible in nav and URL
+ADM-EC5,Decision Table,page_creation,admin,draft-{uid},Draft Page,# Secret Draft,True,False,False,404_not_found,404 Not Found,Draft page returns 404
+ADM-EC6,Decision Table,page_creation,admin,auth-only-{uid},Members Only,# Member Content,False,False,True,auth_required,/login,Auth-required page redirects unauthenticated
+ADM-BVA1,BVA,page_creation,admin,r{uid},Single Char Route,# Short Route,False,False,False,published_page,Short Route,Short route boundary
+ADM-BVA2,BVA,page_creation,admin,long-rules-guide-2026-{uid},Long Route,# Long Route Content,False,False,False,published_page,Long Route Content,Long hyphenated route boundary
+ADM-EG1,Error Guessing,access_control,admin,/admin/nonexistent_xyz_999,,,,,404_not_found,404 Not Found,Non-existent admin route
