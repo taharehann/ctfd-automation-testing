@@ -1,92 +1,142 @@
 # CTFd Selenium Test Automation
 
-Automated Selenium tests for [CTFd](https://github.com/CTFd/CTFd), an open-source CTF platform written in Python (Flask). Built for SQE Assignment 3.
+Automated Selenium test suites for [CTFd](https://github.com/CTFd/CTFd) (v3.8.8), an open-source Capture-The-Flag platform built on Python and Flask. Developed for Software Quality Engineering (SQE) Assignment 3.
 
-## Setup video
+---
 
-- `docs/Setup_video.mp4` shows cloning, installing and starting CTFd.
-- `docs/Setup_video_Part2.mp4` shows the setup page and the first login.
+## Project Overview & Team Contributions
 
-## Modules tested
+The test automation project is divided across two members covering six distinct functional modules with zero overlapping tests:
 
-| Module | Test files | Test data |
-|---|---|---|
-| Authentication (register, login, logout) | `tests/test_auth_register.py`, `tests/test_auth_login.py` | `data/register_data.csv`, `data/login_data.csv` |
-| Challenges (flag submission) | `tests/test_challenges.py` | `data/flag_data.csv` |
-| Scoreboard | `tests/test_scoreboard.py` | none (users are created by the tests) |
+| Member | Assigned Modules | Test Files | Parameterized Datasets | Test Design Notes | Automated Tests |
+|---|---|---|---|---|:---:|
+| **Member 1** | **Authentication** (Register, Login, Logout)<br>**Challenges** (Flag Submission)<br>**Scoreboard** | `tests/test_smoke.py`<br>`tests/test_auth_register.py`<br>`tests/test_auth_login.py`<br>`tests/test_challenges.py`<br>`tests/test_scoreboard.py` | `data/register_data.csv`<br>`data/login_data.csv`<br>`data/flag_data.csv` | `notes/auth_test_design.md`<br>`notes/challenges_test_design.md`<br>`notes/scoreboard_test_design.md` | **49** |
+| **Member 2** | **Profile & Settings** (`/settings`)<br>**Users Directory & Profile** (`/users`, `/users/<id>`)<br>**Admin Panel** (`/admin`, `/admin/pages`, `/admin/users`) | `tests/test_settings.py`<br>`tests/test_users.py`<br>`tests/test_admin.py` | `data/settings_data.csv`<br>`data/users_data.csv`<br>`data/admin_data.csv` | `notes/settings_test_design.md`<br>`notes/users_test_design.md`<br>`notes/admin_test_design.md` | **40** |
+| **Total** | **Full CTFd Test Automation Suite** | **8 test suites** | **6 CSV datasets** | **6 design documents** | **89 Tests (100% Pass)** |
 
-The test design notes (ECP, BVA, decision table and so on) for each module are in the `notes/` folder.
+---
 
-## Setup
+## Testing Techniques Applied
 
-You need Python 3.9 or newer, Git and Google Chrome.
+- **Equivalence Class Partitioning (ECP)**: Input domain partitioning applied across all modules.
+- **Boundary Value Analysis (BVA)**: Upper and lower bounds on field lengths, scores, solve counts, and pagination limits.
+- **Syntax Testing**: Validation of URI schemes (`http://`, `https://`, and invalid schemes such as `ftp://`) and malformed URL structures in user profiles.
+- **Pairwise Testing (All-Pairs)**: Combinatorial test generation across orthogonal profile fields (affiliation, website, country).
+- **Cause-Effect Graphing / Decision Table Testing**: Comprehensive logic modeling for:
+  - Role-based Access Control Matrix (`unauth`, `regular`, `admin` accessing administrative routes).
+  - Multi-variable Page Publication Matrix (`draft`, `hidden`, `auth_required`, visitor auth status).
+- **State Transition Testing (STT)**: User account suspension lifecycle (`Active` $\rightarrow$ `Banned [403]` $\rightarrow$ `Unbanned [Active]`).
+- **Use Case / Scenario Testing**: Multi-step workflows including Directory-to-Profile Navigation, Challenge Solve Reflection, and Custom Page Navbar Publication.
+- **Error Guessing**: Robust handling of non-existent large numeric user IDs, script injections in search queries, and invalid admin subroutes.
 
-1. Clone and start CTFd (in its own folder, next to this repo):
-   ```
-   git clone https://github.com/CTFd/CTFd.git
-   cd CTFd
-   python -m venv venv
-   venv\Scripts\activate
-   pip install -r requirements.txt
-   python serve.py
-   ```
-   CTFd runs at http://localhost:4000. Leave this window open.
+---
 
-2. Open http://localhost:4000 and finish the setup page once:
-   - Event name: `TestCTF`
-   - Mode: Users
-   - Create an admin account (`admin` / `admin@test.com`)
-   - Do not turn on email verification
+## Deliverables & Documentation
 
-3. Log in as admin and create one challenge (Admin Panel, Challenges, plus button):
-   - Name `Test Challenge`, category `Web`, message anything, value `100`, type `standard`
-   - Flag: `flag{test123}`, static, case sensitive
-   - State: Visible, no limit on attempts
+- **Test Workbooks (Excel)**:
+  - `docs/CTFd_Test_Cases.xlsx` (Member 1 Test Cases & Summary)
+  - `docs/CTFd_Test_Cases_Member2.xlsx` (Member 2 Test Cases, Datasets, and Dynamic Formula Summary)
+- **Summary Reports**:
+  - `docs/Unit Test Automation Summary Report CTFd.pdf` (Member 1 Report)
+  - `docs/Member2_Summary_Report.md` (Member 2 Report)
+- **Setup Videos**:
+  - `docs/Setup_video.mp4` (Cloning, installing, and starting CTFd)
+  - `docs/Setup_video_Part2.mp4` (Setup wizard and initial admin configuration)
 
-4. In a second terminal, in this repo:
-   ```
-   python -m venv venv
-   venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
+---
 
-## Running the tests
+## Setup & Prerequisites
 
-CTFd must be running while the tests run.
+Prerequisites: Python 3.9+ (Python 3.11/3.12 recommended), Git, and Google Chrome.
 
+### 1. Start Local CTFd Instance
+Clone and start CTFd in a separate directory next to this repository:
+```bash
+git clone https://github.com/CTFd/CTFd.git
+cd CTFd
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+python serve.py
 ```
-# run everything, one test at a time
-python run_tests.py
+CTFd runs locally at `http://localhost:4000`. Keep this terminal window open.
 
-# smoke + auth only
+### 2. Complete CTFd Initial Setup (One-time)
+Open `http://localhost:4000` in your browser and complete the initial configuration:
+- **Event Name:** `TestCTF`
+- **User Mode:** Users
+- **Admin Account:** `admin` / `Admin@12345` / `admin@test.com`
+- **Email Verification:** Disabled
+
+### 3. Add Benchmark Challenge
+Log in as administrator and create one challenge under **Admin Panel $\rightarrow$ Challenges $\rightarrow$ Create**:
+- **Name:** `Test Challenge`
+- **Category:** `Web`
+- **Value:** `100`
+- **Type:** `standard`
+- **Flag:** `flag{test123}` (static, case-sensitive)
+- **State:** `Visible`
+
+### 4. Setup Test Runner Environment
+In a second terminal, inside this repository:
+```bash
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+---
+
+## Running the Automated Tests
+
+CTFd must be running on `http://localhost:4000` while executing tests.
+
+```bash
+# Run the entire test suite (89 tests, sequential)
+python run_tests.py --suite full
+
+# Run full test suite in parallel with 2 workers (recommended for SQLite)
+python run_tests.py --suite full --workers 2
+
+# Run Member 2 modules only
+python run_tests.py --group settings users admin --workers 2
+
+# Run individual test groups
+python run_tests.py --group settings      # Profile & Settings (15 tests)
+python run_tests.py --group users         # Users Directory & Profile (13 tests)
+python run_tests.py --group admin         # Admin Panel (12 tests)
+python run_tests.py --group challenges    # Challenge submissions (12 tests)
+python run_tests.py --group auth          # Register & Login (27 tests)
+python run_tests.py --group scoreboard    # Scoreboard (9 tests)
+python run_tests.py --group smoke         # Smoke tests (1 test)
+
+# Quick suite (smoke + auth)
 python run_tests.py --suite quick
 
-# one group
-python run_tests.py --group challenges
+# Slow-motion execution for live presentation / demonstration (adds pause per step)
+python run_tests.py --group settings --delay 2
 
-# run the tests of each group in parallel
-python run_tests.py --workers 3
-
-# pause in each test so it can be watched
-python run_tests.py --delay 2
-
-# show the groups and tests in run order
+# List all test IDs in their exact configured execution order
 python run_tests.py --list
 ```
 
-A single file can also be run on its own, for example `python tests\test_scoreboard.py`.
+You can also run any test module directly via standard `unittest`:
+```bash
+python tests/test_settings.py
+python tests/test_users.py
+python tests/test_admin.py
+```
 
-## Groups, suites and order
+---
 
-All of this is set in `test_config.py`.
+## Test Architecture & Configuration
 
-- **Groups:** `smoke`, `auth`, `challenges`, `scoreboard`. They run in the order they are written in the file.
-- **Suites:** `quick` (smoke, auth) and `full` (all groups).
-- **Test order inside a class** comes from `METHOD_ORDER` in the same file.
-- **Parallel runs:** with `--workers N`, the tests of one group run at the same time, each with its own browser. Groups still run one after another. Every test creates its own user, so the tests do not depend on each other. Because CTFd uses SQLite, 2 or 3 workers is a safe number.
-- **Data driven tests:** the register, login and flag tests read their inputs from the CSV files in `data/` (using `ddt`), and each row runs as its own test.
+All execution settings are configured in `test_config.py`:
 
-## Notes
-
-- `login_user` is created by the login tests on the first run. If it already exists, CTFd shows an error and the tests carry on.
-- The tests assume the admin account and the Test Challenge above. If you use different values, change them in the CSV files and test files.
+- **Groups**: `smoke`, `auth`, `challenges`, `scoreboard`, `settings`, `users`, `admin`. Groups execute sequentially in this defined order.
+- **Suites**:
+  - `quick`: `smoke`, `auth`
+  - `full`: all 7 groups (`smoke`, `auth`, `challenges`, `scoreboard`, `settings`, `users`, `admin`)
+- **Execution Order (`METHOD_ORDER`)**: Deterministic method execution within test classes.
+- **Strict Test Isolation**: Every automated test registers a dynamically generated account with UUID suffixes (`uuid.uuid4().hex[:8]`). Tests maintain zero shared state, eliminating database locks and enabling clean multi-worker parallel execution.
+- **Display Scaling & Safe Interaction**: Chrome instances launch with `--force-device-scale-factor=1` and `--window-size=1920,1080`, using a centered scroll mechanism (`scrollIntoView({block: 'center'})`) to eliminate element interception from CTFd's sticky footer.
