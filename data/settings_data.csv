@@ -1,0 +1,14 @@
+test_id,action,name,email,confirm,password,affiliation,website,country,result,messages
+SET-EC1,name,user_{uid},,,,,,,success,Your profile has been updated
+SET-EC3,name,admin,,,,,,,rejected,User name has already been taken
+SET-EC4,email,,new_{uid}@test.com,Pass@123,,,,,success,Your profile has been updated
+SET-EC5,email,,admin@test.com,Pass@123,,,,,rejected,Email address has already been used
+SET-EC6,email,,new_{uid}@test.com,,,,,,rejected,Please confirm your current password
+SET-EC7,password,,,Pass@123,NewPass@456,,,,success,Your profile has been updated
+SET-EC8,password,,,Wrong@999,NewPass@456,,,,rejected,Your previous password is incorrect
+SET-EC9,password,,,,NewPass@456,,,,rejected,Please confirm your current password
+SET-EC10,website,,,,,,https://ctfd.io,,success,Your profile has been updated
+SET-EC11,website,,,,,,http://example.com,,success,Your profile has been updated
+SET-EC12,website,,,,,,example.com,,rejected,Websites must be a proper URL starting with http or https
+SET-SYN1,website,,,,,,ftp://ftp.example.com,,rejected,Websites must be a proper URL starting with http or https
+SET-PW1,profile,,,,,Security Lab,https://lab.org,US,success,Your profile has been updated
