@@ -1,0 +1,10 @@
+test_id,technique,category,field,query,page,user_id_param,expected_result,note
+USR-EC1,ECP,directory,,,,,table_present,Verify users directory table and columns exist
+USR-EC3,ECP,profile,,,,999999,404_not_found,Non-existent numeric user ID
+USR-EC4,ECP,search,name,{user_name},,,match_found,Search by exact username
+USR-EC5,ECP,search,name,nonexistent_user_xyz_999,,,no_results,Search for non-existent username
+USR-BVA1,BVA,zero_score,,,,,listed_in_directory,Fresh user with 0 points listed in users directory
+USR-BVA3,BVA,pagination,,,1,,page_loaded,Pagination boundary first page
+USR-BVA4,BVA,pagination,,,9999,,empty_page,Pagination boundary out-of-bounds page
+USR-EG1,Error Guessing,profile,,,,99999999,404_not_found,Extremely large user ID
+USR-EG2,Error Guessing,search,name,<script>,,,no_results,Special script characters in search query
