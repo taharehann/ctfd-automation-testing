@@ -78,7 +78,7 @@ class LoginTests(unittest.TestCase):
                 time.sleep(DELAY)
                 self.assertIn(row["message"], alert.text, row["test_id"])
             else:
-                time.sleep(DELAY)  # browser blocked the form
+                time.sleep(max(DELAY, 1))  # browser blocked the form, give the page time to react
             self.assertIn("/login", driver.current_url, row["test_id"])
 
     def test_logout(self):

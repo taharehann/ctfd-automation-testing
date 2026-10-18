@@ -63,7 +63,15 @@ class ScoreboardTests(unittest.TestCase):
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "table"))
         )
+        # wait until the column headers have their text (the page may still be drawing)
+        WebDriverWait(self.driver, 10).until(
+            lambda d: len(self.read_headers()) >= 3 and all(self.read_headers())
+        )
         time.sleep(DELAY)
+
+    def read_headers(self):
+        return [th.text.strip().lower()
+                for th in self.driver.find_elements(By.CSS_SELECTOR, "table thead th")]
 
     def read_rows(self):
         """Return the scoreboard as a list of (place, username, score)."""
@@ -83,7 +91,7 @@ class ScoreboardTests(unittest.TestCase):
     @data("Place", "User", "Score")
     def test_table_has_column(self, column):
         self.open_scoreboard()
-        headers = [th.text.strip().lower() for th in self.driver.find_elements(By.CSS_SELECTOR, "table thead th")]
+        headers = self.read_headers()
         self.assertIn(column.lower(), headers)
 
     # ---- score boundary: 0 points and 100 points ----

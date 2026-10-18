@@ -80,7 +80,7 @@ class RegisterTests(unittest.TestCase):
                 for message in expected_messages:
                     self.assertIn(message, shown_text, row["test_id"])
             else:
-                time.sleep(DELAY)  # browser blocked the form
+                time.sleep(max(DELAY, 1))  # browser blocked the form, give the page time to react
             self.assertIn("/register", driver.current_url, row["test_id"])
 
 
