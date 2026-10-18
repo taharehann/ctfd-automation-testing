@@ -2,6 +2,11 @@
 
 Automated Selenium tests for [CTFd](https://github.com/CTFd/CTFd), an open-source CTF platform written in Python (Flask). Built for SQE Assignment 3.
 
+## Setup video
+
+- `docs/Setup_video.mp4` shows cloning, installing and starting CTFd.
+- `docs/Setup_video_Part2.mp4` shows the setup page and the first login.
+
 ## Modules tested
 
 | Module | Test files | Test data |
@@ -50,12 +55,23 @@ You need Python 3.9 or newer, Git and Google Chrome.
 CTFd must be running while the tests run.
 
 ```
-python run_tests.py                       run everything, one test at a time
-python run_tests.py --suite quick         smoke + auth only
-python run_tests.py --group challenges    one group
-python run_tests.py --workers 3           run the tests of each group in parallel
-python run_tests.py --delay 2             pause in each test so it can be watched
-python run_tests.py --list                show the groups and tests in run order
+# run everything, one test at a time
+python run_tests.py
+
+# smoke + auth only
+python run_tests.py --suite quick
+
+# one group
+python run_tests.py --group challenges
+
+# run the tests of each group in parallel
+python run_tests.py --workers 3
+
+# pause in each test so it can be watched
+python run_tests.py --delay 2
+
+# show the groups and tests in run order
+python run_tests.py --list
 ```
 
 A single file can also be run on its own, for example `python tests\test_scoreboard.py`.
